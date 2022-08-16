@@ -1,3 +1,4 @@
+import { useNavigate } from "@shopify/app-bridge-react";
 import {
   Card,
   Page,
@@ -6,9 +7,11 @@ import {
   Stack,
   Link,
   Heading,
+  Button,
 } from "@shopify/polaris";
 
 export default function HomePage() {
+  const navigate = useNavigate();
   return (
     <Page narrowWidth>
       <Layout>
@@ -50,6 +53,13 @@ export default function HomePage() {
                 </TextContainer>
               </Stack.Item>
             </Stack>
+          </Card>
+        </Layout.Section>
+        <Layout.Section>
+          <Card sectioned title="Check out this shop data">
+            <Button onClick={() => navigate("/shopdata")} primary>
+              Fetch Shop Data
+            </Button>
           </Card>
         </Layout.Section>
       </Layout>

@@ -24,6 +24,10 @@ export default function App() {
                   label: "Page name",
                   destination: "/pagename",
                 },
+                {
+                  label: "Shop Data",
+                  destination: "/shopdata",
+                },
               ]}
             />
             <Routes pages={pages} />
