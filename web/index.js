@@ -28,6 +28,7 @@ import {
 } from "./database/sessions/handlers.js";
 import gdprRoutes from "./routes/gdprRoutes.js";
 import shopRoute from "./routes/shop/index.js";
+import billingRoutes from "./routes/billing/index.js";
 
 // Uncomment when you add the Bugsnag API key
 // const bugsnagApiKey = process.env.BUGSNAG_API_KEY ? true : false;
@@ -196,6 +197,7 @@ export async function createServer(
   app.use("/api/gdpr", hmacVerify, gdprRoutes);
 
   shopRoute(app);
+  billingRoutes(app);
 
   app.use((req, res, next) => {
     const shop = Shopify.Utils.sanitizeShop(req.query.shop);
