@@ -1,15 +1,23 @@
-import { join } from "path";
-import fs from "fs";
 import "dotenv/config";
+import { join } from "path";
 import express from "express";
 import cookieParser from "cookie-parser";
+// import Bugsnag from "@bugsnag/js";
+// import BugsnagPluginExpress from "@bugsnag/plugin-express";
 import { Shopify, LATEST_API_VERSION } from "@shopify/shopify-api";
 
 import applyAuthMiddleware from "./middleware/auth.js";
 import verifyRequest from "./middleware/verify-request.js";
+
 import { hmacVerify } from "./helpers/hmac-verify.js";
 import productCreator from "./helpers/product-creator.js";
-import { BillingInterval } from "./helpers/ensure-billing.js";
+// import { BillingInterval } from "./helpers/ensure-billing.js";
+import {
+  customerDataRequest,
+  customerRedact,
+  shopRedact,
+} from "./helpers/gdpr-handlers.js";
+
 import { AppInstallations } from "./helpers/app-installations.js";
 import {
   storeCallback,
@@ -19,11 +27,18 @@ import {
   findSessionsByShopCallback,
 } from "./database/sessions/handlers.js";
 import gdprRoutes from "./routes/gdprRoutes.js";
-import {
-  customerDataRequest,
-  customerRedact,
-  shopRedact,
-} from "./helpers/gdpr-handlers.js";
+
+// Uncomment when you add the Bugsnag API key
+// const bugsnagApiKey = process.env.BUGSNAG_API_KEY ? true : false;
+// if (bugsnagApiKey) {
+//   Bugsnag.start({
+//     apiKey: process.env.BUGSNAG_API_KEY,
+//     plugins: [BugsnagPluginExpress],
+//   });
+// } else {
+//   console.warn(`Missing BUGSNAG_API_KEY environment variable`);
+// }
+// const BugsnagMiddleware = bugsnagApiKey && Bugsnag.getPlugin("express");
 
 const USE_ONLINE_TOKENS = true;
 const TOP_LEVEL_OAUTH_COOKIE = "shopify_top_level_oauth";
@@ -101,6 +116,13 @@ export async function createServer(
   billingSettings = BILLING_SETTINGS
 ) {
   const app = express();
+
+  // Bugsnag Middleware
+  // -- must be first to catch any error downstream
+  // if (bugsnagApiKey) {
+  //   app.use(BugsnagMiddleware.requestHandler);
+  // }
+
   app.set("top-level-oauth-cookie", TOP_LEVEL_OAUTH_COOKIE);
   app.set("use-online-tokens", USE_ONLINE_TOKENS);
 
@@ -221,6 +243,10 @@ export async function createServer(
         .send(fs.readFileSync(fallbackFile));
     }
   });
+
+  // if (bugsnagApiKey) {
+  //   app.use(BugsnagMiddleware.errorHandler);
+  // }
 
   return { app };
 }
