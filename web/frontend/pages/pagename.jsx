@@ -7,13 +7,13 @@ export default function PageName() {
       <Layout>
         <Layout.Section>
           <Card sectioned>
-            <Heading>Heading</Heading>
+            <Heading>Example Page</Heading>
             <TextContainer>
               <p>Body</p>
             </TextContainer>
           </Card>
           <Card sectioned>
-            <Heading>Heading</Heading>
+            <Heading>Content</Heading>
             <TextContainer>
               <p>Body</p>
             </TextContainer>
@@ -21,7 +21,7 @@ export default function PageName() {
         </Layout.Section>
         <Layout.Section secondary>
           <Card sectioned>
-            <Heading>Heading</Heading>
+            <Heading>Sidebar</Heading>
             <TextContainer>
               <p>Body</p>
             </TextContainer>
